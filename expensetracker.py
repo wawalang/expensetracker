@@ -1,10 +1,6 @@
 import argparse, os
 from datetime import datetime
 from pathlib import Path
-""" parser.add_argument("echo", help="echo the string")
-# now the command is like this: x.py [something] -- first argument added is echo, and the commands first argument is something, so it echoes the argument.
-args = parser.parse_args()
-print(args.echo) """
 
 parser = argparse.ArgumentParser()
 parser.add_argument('main', help='put add/delete/list/summary here. delete can be changed to remove and list can be changed to view.')
@@ -71,8 +67,8 @@ def sumE(month=0): # wooow summary oooo waowwww haha hihi.. month includation
             with open(fn) as filen:
                 amou = float(filen.readline().strip())
                 filen.readline()
-                year=int(filen.readline()).strip()
-                monthf=int(filen.readline()).strip()
+                year=int(filen.readline().strip())
+                monthf=int(filen.readline().strip())
             if year==nyear and monthf==month:
                 summm += amou
             else:
