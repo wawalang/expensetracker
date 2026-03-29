@@ -17,16 +17,18 @@ print(args.echo) """
 # remove - expensetracker.py remove [ID]
 # update - expensetracker.py update [ID]
 # view - expensetracker.py [view] --month:...
-p=Path("")
-files=sorted([i.name for i in p.iterdir() if i.is_file()])
 parser = argparse.ArgumentParser()
-parser.add_argument('main', help='put add/remove/view')
+parser.add_argument('main', help='put add/delete/list/summary here. delete can be changed to remove and list can be changed to view.')
 parser.add_argument('-a','--amount', help='amount on add, ID on remove and update.', type=float)
 parser.add_argument('-d','--description', help='description')
 parser.add_argument('-u','--uamount', help="if you're using update, use this as the amount. -a should be ID if you're using update.", type=float)
 parser.add_argument('-m','--month', help="(for view) only view a certain month (numeric value)", type=int)
 args: argparse.Namespace = parser.parse_args()
-
+dateNtime=datetime.now()
+nyear=dateNtime.year # now year
+nmonth=dateNtime.month # now month
+nday=dateNtime.day # now day
+onlydate=f"{nyear}-{nmonth}-{nday}"
 def addE(amount, description): # add an expense
     if os.path.exists("IDTrack"):
         with open("IDTrack", "r") as idt:
@@ -40,38 +42,45 @@ def addE(amount, description): # add an expense
     n = open(str(idnum), "w")
     n.write(f'{amount}\n{description}')
     n.close()
-    print(f"Successfully added expense:\nID:{idnum}\nAmount: {amount}\nDescription: {description}")
-
+    print(f"Expense added successfully. (ID: {idnum})")
 def removeE(ID): # remove an expense
     os.remove(str(int(ID)))
-
 def updateE(ID, amount, description): #update an expense
-    with open(str(int(ID)), "r") as fil:
-        oldamount=fil.readline()
-        olddesc=fil.readline()
-    print(f"Old expense info:\nID:{ID}\nAmount: {oldamount}\nDescription: {olddesc}")
     with open(str(int(ID)), "w") as fil:
         fil.write(f'{amount}\n{description}')
-    print(f"Successfully updated expense:\nID:{ID}\nAmount: {amount}\nDescription: {description}")
-
-def viewE(month=False):
+    print(f"Expense updated successfully. (ID: {ID})")
+def viewE(): # view/list expenses (no summary)
     directory=Path('')
-    if month==False:
-        print("-Expense List-")
+    print("-Expense List-")
+    for fn in directory.iterdir():
+        if fn.name == "IDTrack" or fn.name == "expensetracker.py":
+            continue
+        with open(fn) as filen:
+            amou=filen.readline()
+            desc=filen.readline()
+            print(f"- ID: {fn} - Description: {desc} - Amount: {amou}")
+    print("--*Finished*--")
+def sumE(month=0): # wooow summary oooo waowwww haha hihi.. month includation
+    directory = Path('')
+    summm = 0
+    if month==0:
         for fn in directory.iterdir():
             if fn.name == "IDTrack" or fn.name == "expensetracker.py":
                 continue
             with open(fn) as filen:
-                amou=filen.readline()
-                desc=filen.readline()
-                print(f"- ID: {fn} - Amount: {amou} - Description: {desc}")
-        print("--*Finished*--")
-
+                amou = float(filen.readline().strip())
+                summm += amou
+    else:
+        print("wawa")
+    print(f"Total expenses: ${summm}")
+    return summm
 if args.main == "add":
     addE(args.amount, args.description)
-elif args.main == "remove":
+elif args.main == "remove" or args.main == "delete":
     removeE(args.amount)
-elif args.main == "update":
+elif args.main == args.main == "update":
     updateE(args.amount, args.uamount, args.description)
-elif args.main == "view":
+elif args.main == "list" or args.main == "view":
     viewE()
+elif args.main == "summary":
+    sumE()
