@@ -1,9 +1,3 @@
-# Requirements
-# Users can add an expense with a description and amount. Users can update an expense. Users can delete an expense. Users can view all expenses. Users can view a summary of all expenses.Users can view a summary of expenses for a specific month (of current year). #
-
-# Additional
-# Add expense categories and allow users to filter expenses by category. Allow users to set a budget for each month and show a warning when the user exceeds the budget. Allow users to export expenses to a CSV file.
-
 import argparse, os
 from datetime import datetime
 from pathlib import Path
@@ -12,11 +6,6 @@ from pathlib import Path
 args = parser.parse_args()
 print(args.echo) """
 
-# HOW IT SHOULD BE
-# add - expensetracker.py add --amount [amount] --description [description] ----- creates a number ID for expense.
-# remove - expensetracker.py remove [ID]
-# update - expensetracker.py update [ID]
-# view - expensetracker.py [view] --month:...
 parser = argparse.ArgumentParser()
 parser.add_argument('main', help='put add/delete/list/summary here. delete can be changed to remove and list can be changed to view.')
 parser.add_argument('-a','--amount', help='amount on add, ID on remove and update.', type=float)
@@ -29,13 +18,7 @@ nyear=dateNtime.year # now year
 nmonth=dateNtime.month # now month
 nday=dateNtime.day # now day
 onlydate=f"{nyear}-{nmonth}-{nday}"
-""" EXPENSE FILE FORMAT:
-amount
-description
-date_year
-date_month
-date_day
-"""
+
 def addE(amount, description): # add an expense
     if os.path.exists("IDTrack"):
         with open("IDTrack", "r") as idt:
